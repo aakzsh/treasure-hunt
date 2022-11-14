@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "356429459307",
+    "project_id": "infox-treasure-hunt",
+    "storage_bucket": "infox-treasure-hunt.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:356429459307:android:b6a742554cbc22afc2662e",
+        "android_client_info": {
+          "package_name": "com.example.fanapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "356429459307-8kc13hf6lb1j931vemde86np8toqroai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACt0SqHf6YoNkyMjcrKRDdQMiHIeeqzHk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "356429459307-8kc13hf6lb1j931vemde86np8toqroai.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:356429459307:android:7a6af4300dfe8b30c2662e",
+        "android_client_info": {
+          "package_name": "me.aakzsh.infoxnew"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "356429459307-8kc13hf6lb1j931vemde86np8toqroai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACt0SqHf6YoNkyMjcrKRDdQMiHIeeqzHk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "356429459307-8kc13hf6lb1j931vemde86np8toqroai.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
