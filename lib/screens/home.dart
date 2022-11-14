@@ -1,4 +1,3 @@
-
 import 'package:fanapp/main.dart';
 import 'package:fanapp/screens/leaderboard.dart';
 import 'package:fanapp/screens/scanner.dart';
@@ -20,6 +19,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 12, 12, 12),
       body: SingleChildScrollView(
         child: SafeArea(
             child: Padding(

@@ -23,6 +23,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 12, 12, 12),
       body: SingleChildScrollView(
         child: SafeArea(
             child: Column(
@@ -95,38 +96,44 @@ class _LoginState extends State<Login> {
               ),
             ),
             const SizedBox(height: 20),
-            btnWidget(
-              "Login",
-              callback: () async {
-                if (teamNameC.text.isNotEmpty && passKeyC.text.isNotEmpty) {
-                  var data = await FirebaseFirestore.instance
-                      .collection("teams")
-                      .doc(teamNameC.text)
-                      .get();
-                  if (data.exists) {
-                    print("exists");
-
-                    if (data.data()!['passkey'] == passKeyC.text) {
-                      final prefs = await SharedPreferences.getInstance();
-                      await prefs.setBool("isLogged", true);
-                      await prefs.setString("teamName", teamNameC.text);
-
-                      // var hehe = await prefs.getBool("isLogged");
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => const Home())),
-                          (route) => false);
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: btnWidget(
+                  "Login",
+                  callback: () async {
+                    if (teamNameC.text.isNotEmpty && passKeyC.text.isNotEmpty) {
+                      var data = await FirebaseFirestore.instance
+                          .collection("teams")
+                          .doc(teamNameC.text)
+                          .get();
+                      if (data.exists) {
+                        print("exists");
+              
+                        if (data.data()!['passkey'] == passKeyC.text) {
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setBool("isLogged", true);
+                          await prefs.setString("teamName", teamNameC.text);
+              
+                          // var hehe = await prefs.getBool("isLogged");
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => const Home())),
+                              (route) => false);
+                        } else {
+                          ShowSnackBar("Incorrect Password", context);
+                        }
+                      } else {
+                        ShowSnackBar("User Doesn't Exist", context);
+                      }
                     } else {
-                      ShowSnackBar("Incorrect Password", context);
+                      ShowSnackBar("Please fill username and password", context);
                     }
-                  } else {
-                    ShowSnackBar("User Doesn't Exist", context);
-                  }
-                } else {
-                  ShowSnackBar("Please fill username and password", context);
-                }
-              },
+                  },
+                ),
+              ),
             ),
           ],
         )),
