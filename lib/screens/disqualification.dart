@@ -1,3 +1,4 @@
+import 'package:fanapp/extras/colors.dart';
 import 'package:flutter/material.dart';
 
 class Disqualification extends StatefulWidget {
@@ -11,12 +12,13 @@ class _DisqualificationState extends State<Disqualification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SafeArea(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Text("Sorry, your team is out!!"),
-        ],
+          child: Center(
+        child: Text(
+          "Sorry, your team is out!!",
+          style: TextStyle(color: MyColors.GreenColor, fontSize: 20),
+        ),
       )),
     );
   }

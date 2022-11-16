@@ -33,40 +33,39 @@ class _LeaderboardState extends State<Leaderboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.black,
         body: SafeArea(
-      child: Column(
-       
-        children: [
-          
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.arrow_back_ios)),
-                const Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 50.0),
-                    child: Text(
-                      "Leaderboard",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 24.0,
-                          color: MyColors.GreenColor,
-                          fontWeight: FontWeight.bold),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.arrow_back_ios)),
+                    const Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 50.0),
+                        child: Text(
+                          "Leaderboard",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 24.0,
+                              color: MyColors.GreenColor,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 20),
+              Text(scores)
+            ],
           ),
-          const SizedBox(height: 20),
-          Text(scores)
-        ],
-      ),
-    ));
+        ));
   }
 }
