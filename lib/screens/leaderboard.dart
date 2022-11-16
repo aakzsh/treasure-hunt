@@ -12,6 +12,7 @@ class Leaderboard extends StatefulWidget {
 
 class _LeaderboardState extends State<Leaderboard> {
   String scores = "hehe";
+  var score = [];
   @override
   void initState() {
     getData();
@@ -19,13 +20,18 @@ class _LeaderboardState extends State<Leaderboard> {
   }
 
   void getData() async {
+    // setState(() {
+    //   score = ["123"];
+    // });
+    print("123");
     await FirebaseFirestore.instance
         .collection("leaderboard")
         .doc("scores")
         .get()
         .then((value) => {
+              // print(value),
               setState(() {
-                scores = value.data().toString();
+                score = value.data()!['scores'];
               })
             });
   }
@@ -63,9 +69,14 @@ class _LeaderboardState extends State<Leaderboard> {
                 ),
               ),
               const SizedBox(height: 20),
-              Text(scores)
+              Text(score.toString())
             ],
           ),
         ));
   }
+}
+
+String showTxt(score) {
+  score..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  return "";
 }
