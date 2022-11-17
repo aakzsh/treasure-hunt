@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fanapp/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../extras/colors.dart';
 
@@ -13,6 +17,7 @@ class Leaderboard extends StatefulWidget {
 class _LeaderboardState extends State<Leaderboard> {
   String scores = "hehe";
   var score = [];
+  // String group = "A";
   @override
   void initState() {
     getData();
@@ -23,17 +28,36 @@ class _LeaderboardState extends State<Leaderboard> {
     // setState(() {
     //   score = ["123"];
     // });
+    var prefs = await SharedPreferences.getInstance();
+    int round = prefs.getInt("round")!;
+
+    setState(() {
+      group = prefs.getString("group")!;
+    });
+
     print("123");
     await FirebaseFirestore.instance
         .collection("leaderboard")
-        .doc("scores")
+        .doc(round == 1 ? "scores" : "scores2")
         .get()
         .then((value) => {
               // print(value),
               setState(() {
                 score = value.data()!['scores'];
               })
-            });
+            })
+        .then((value) => {filterData()});
+  }
+
+  void filterData() async {
+    log(score.toString());
+    log("group hai" + group);
+    var x = List.from(score.where((element) => element['group'] == 'A'));
+    x.sort((a, b) => b['points'].compareTo(a['points']));
+    setState(() {
+      score = x;
+    });
+    log(x.toString());
   }
 
   @override
@@ -52,11 +76,11 @@ class _LeaderboardState extends State<Leaderboard> {
                           Navigator.pop(context);
                         },
                         icon: const Icon(Icons.arrow_back_ios)),
-                    const Expanded(
+                    Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(right: 50.0),
+                        padding: EdgeInsets.only(right: 0.0),
                         child: Text(
-                          "Leaderboard",
+                          "Leaderboard Group $group",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 24.0,
@@ -65,11 +89,32 @@ class _LeaderboardState extends State<Leaderboard> {
                         ),
                       ),
                     ),
+                    IconButton(
+                        onPressed: () {
+                          getData();
+                        },
+                        icon: const Icon(Icons.refresh)),
                   ],
                 ),
               ),
               const SizedBox(height: 20),
-              Text(score.toString())
+              Container(
+                height: 400,
+                child: ListView.builder(
+                    itemCount: score.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        leading: const Icon(Icons.auto_graph),
+                        trailing: Text(
+                          "Rank ${index + 1}",
+                          style: TextStyle(color: Colors.green, fontSize: 15),
+                        ),
+                        title: Text(score[index]['team']),
+                        subtitle:
+                            Text("Score: " + score[index]['points'].toString()),
+                      );
+                    }),
+              )
             ],
           ),
         ));

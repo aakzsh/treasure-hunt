@@ -20,10 +20,12 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
+String group = 'A';
+
 class _HomeState extends State<Home> {
   var ins = FirebaseFirestore.instance;
   int round = 0, score = 0, level = 0;
-  String teamname = "", group = "";
+  String teamname = "";
   var questions;
   @override
   void initState() {
@@ -105,6 +107,7 @@ class _HomeState extends State<Home> {
   void setDetails() async {
     var prefs = await SharedPreferences.getInstance();
     await prefs.setString("group", group);
+    await prefs.setInt("round", round);
   }
 
   @override
