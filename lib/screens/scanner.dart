@@ -101,8 +101,8 @@ class _QRScannerState extends State<QRScanner> {
   }
 
   Future<bool> checkAnswer(String ans) async {
-    if (1 == 1
-        //ans == getQuestion()['code']
+    if (
+        ans == getQuestion()['code']
         ) {
       //increase points and level'
       await FirebaseFirestore.instance
