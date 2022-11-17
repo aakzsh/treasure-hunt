@@ -17,6 +17,7 @@ class Leaderboard extends StatefulWidget {
 class _LeaderboardState extends State<Leaderboard> {
   String scores = "hehe";
   var score = [];
+  int round = 1;
   // String group = "A";
   @override
   void initState() {
@@ -29,10 +30,10 @@ class _LeaderboardState extends State<Leaderboard> {
     //   score = ["123"];
     // });
     var prefs = await SharedPreferences.getInstance();
-    int round = prefs.getInt("round")!;
 
     setState(() {
       group = prefs.getString("group")!;
+      round = prefs.getInt("round")!;
     });
 
     print("123");
@@ -52,7 +53,13 @@ class _LeaderboardState extends State<Leaderboard> {
   void filterData() async {
     log(score.toString());
     log("group hai" + group);
-    var x = List.from(score.where((element) => element['group'] == 'A'));
+    var x = [];
+
+    if (round == 1) {
+      x = List.from(score.where((element) => element['group'] == 'A'));
+    } else {
+      x = score;
+    }
     x.sort((a, b) => b['points'].compareTo(a['points']));
     setState(() {
       score = x;
@@ -62,6 +69,7 @@ class _LeaderboardState extends State<Leaderboard> {
 
   @override
   Widget build(BuildContext context) {
+    double h = MediaQuery.of(context).size.height;
     return Scaffold(
         backgroundColor: Colors.black,
         body: SafeArea(
@@ -80,7 +88,9 @@ class _LeaderboardState extends State<Leaderboard> {
                       child: Padding(
                         padding: EdgeInsets.only(right: 0.0),
                         child: Text(
-                          "Leaderboard Group $group",
+                          round == 1
+                              ? "Leaderboard Round 1 Group $group"
+                              : "Leaderboard Round 2",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 24.0,
@@ -99,7 +109,9 @@ class _LeaderboardState extends State<Leaderboard> {
               ),
               const SizedBox(height: 20),
               Container(
-                height: 400,
+                // color: Colors.orange,
+                // height: 400,
+                height: h - 100,
                 child: ListView.builder(
                     itemCount: score.length,
                     itemBuilder: (BuildContext context, int index) {
