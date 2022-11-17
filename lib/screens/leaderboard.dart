@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fanapp/currentuser.dart';
 import 'package:fanapp/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +33,7 @@ class _LeaderboardState extends State<Leaderboard> {
     var prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      group = prefs.getString("group")!;
+      // group = prefs.getString("group")!;
       round = prefs.getInt("round")!;
     });
 
@@ -65,11 +66,12 @@ class _LeaderboardState extends State<Leaderboard> {
 
   void filterData() async {
     log(score.toString());
-    log("group hai" + group);
+    // log("group hai" + group);
     var x = [];
 
     if (round == 1) {
-      x = List.from(score.where((element) => element['group'] == group));
+      x = List.from(
+          score.where((element) => element['group'] == CurrentUser.userGRP));
     } else {
       x = score;
     }

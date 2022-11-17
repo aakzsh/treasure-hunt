@@ -44,15 +44,23 @@ class _HomeState extends State<Home> {
     /*getTeamData();
     setDetails();*/
 
+    isOut();
+
     super.initState();
   }
 
-  Future<bool> isOut() async {
+  void isOut() async {
     bool isout = false;
     await ins.collection("teams").doc(CurrentUser.id).get().then((value) => {
           isout = value.data()!['isOut'],
         });
-    return isout;
+
+    if (isout == true) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: ((context) => Disqualification())),
+          (route) => false);
+    }
   }
 
   void getRound() async {
@@ -194,21 +202,13 @@ class _HomeState extends State<Home> {
                           const SizedBox(height: 20),
                           btnWidget("Scan QR Code", callback: () async {
                             if (CurrentUser.level <= 4) {
-                              bool out = await isOut();
-                              if (out) {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: ((context) =>
-                                            Disqualification())),
-                                    (route) => false);
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: ((context) =>
-                                            const QRScanner())));
-                              }
+                              isOut();
+
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          const QRScanner())));
                             } else {
                               ShowSnackBar(
                                   "All Questions Done! Nothing to Scan more",
