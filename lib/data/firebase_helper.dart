@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fanapp/currentuser.dart';
 
-Future updateTeamData() async {
+Future<int> updateTeamData() async {
+  int code = 200;
   await FirebaseFirestore.instance
       .collection("teams")
       .doc(CurrentUser.id)
@@ -14,5 +15,7 @@ Future updateTeamData() async {
             CurrentUser.userName = value.data()!['name'],
             CurrentUser.score = value.data()!['score'],
             print("isoutvalue" + CurrentUser.isOut.toString()),
-          });
+          })
+      .catchError(() => code = 404);
+  return code;
 }

@@ -119,7 +119,7 @@ class _LoginState extends State<Login> {
                           await prefs.setBool("isLogged", true);
                           await prefs.setString("teamName", teamNameC.text);
                           CurrentUser.id = data.data()!['id'];
-                          await updateTeamData();
+                          //await updateTeamData();
                           // var hehe = await prefs.getBool("isLogged");
                           Navigator.pushAndRemoveUntil(
                               context,

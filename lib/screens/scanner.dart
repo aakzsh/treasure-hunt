@@ -6,6 +6,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../currentuser.dart';
 import '../data/questions.dart';
+import 'home.dart';
 
 class QRScanner extends StatefulWidget {
   const QRScanner({super.key});
@@ -19,72 +20,90 @@ class _QRScannerState extends State<QRScanner> {
   Barcode? result;
   QRViewController? controllery;
   bool scanned = false;
-
+  bool checkingans = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Container(
-              color: Color.fromARGB(255, 12, 12, 12),
+          child: Stack(
+        children: [
+          Column(
+            children: <Widget>[
+              Container(
+                color: Color.fromARGB(255, 12, 12, 12),
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                    child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        "ATTACK ON INFOX",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 24.0,
+                            color: MyColors.GreenColor,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "QR Code Scanner",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                )),
+              ),
+              Expanded(
+                  child: Stack(
+                children: [
+                  mobile.MobileScanner(
+                      allowDuplicates: false,
+                      onDetect: (barcode, args) {
+                        if (barcode.rawValue != null) {
+                          if (scanned == false) {
+                            showQRScanned(barcode.rawValue!);
+                            scanned = true;
+                          }
+                        }
+                      }),
+                ],
+              )),
+              // Expanded(
+              //   flex: 5,
+              //   child: QRView(
+              //     key: qrKey,
+              //     onQRViewCreated: _onQRViewCreated,
+              //   ),
+              // ),
+            ],
+          ),
+          Visibility(
+            visible: checkingans,
+            child: Container(
+              color: Colors.black12,
+              height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: Center(
-                  child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 20.0),
-                child: Column(
-                  children: [
-                    Text(
-                      "ATTACK ON INFOX",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 24.0,
-                          color: MyColors.GreenColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      "QR Code Scanner",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                child: CircularProgressIndicator(
+                  color: MyColors.GreenColor,
                 ),
-              )),
+              ),
             ),
-            Expanded(
-                child: Stack(
-              children: [
-                mobile.MobileScanner(
-                    allowDuplicates: false,
-                    onDetect: (barcode, args) {
-                      if (barcode.rawValue != null) {
-                        if (scanned == false) {
-                          showQRScanned(barcode.rawValue!);
-                          scanned = true;
-                        }
-                      }
-                    }),
-              ],
-            )),
-            // Expanded(
-            //   flex: 5,
-            //   child: QRView(
-            //     key: qrKey,
-            //     onQRViewCreated: _onQRViewCreated,
-            //   ),
-            // ),
-          ],
-        ),
-      ),
+          )
+        ],
+      )),
     );
   }
 
   Future<bool> checkAnswer(String ans) async {
-    if (ans == getQuestion()['code']) {
+    if (1 == 1
+        //ans == getQuestion()['code']
+        ) {
       //increase points and level'
       await FirebaseFirestore.instance
           .collection('teams')
@@ -95,6 +114,7 @@ class _QRScannerState extends State<QRScanner> {
           })
           .then((value) => print("User Updated"))
           .catchError((error) => print("Failed to update user: $error"));
+
       return true;
     } else {
       //decrease points
@@ -104,6 +124,7 @@ class _QRScannerState extends State<QRScanner> {
           .update({'score': FieldValue.increment(-5)})
           .then((value) => print("User Updated"))
           .catchError((error) => print("Failed to update user: $error"));
+
       return false;
     }
   }
@@ -161,9 +182,19 @@ class _QRScannerState extends State<QRScanner> {
               ),
               MaterialButton(
                 onPressed: () async => {
+                  setState(() {
+                    checkingans = true;
+                  }),
                   await checkAnswer(ans),
+                  setState(() {
+                    checkingans = false;
+                  }),
                   Navigator.of(context).pop(true),
-                  scanned = false
+                  scanned = false,
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: ((context) => const Home())),
+                      (route) => false)
                 },
                 //return true when click on "Yes"
                 child: Text(

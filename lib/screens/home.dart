@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fanapp/currentuser.dart';
+import 'package:fanapp/data/firebase_helper.dart';
 import 'package:fanapp/data/questions.dart';
 import 'package:fanapp/extras/snackbar.dart';
 import 'package:fanapp/main.dart';
@@ -116,97 +117,148 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 12, 12, 12),
-      body: SingleChildScrollView(
-        child: SafeArea(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            //mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Image.asset("assets/infoxlogo.png"),
-                  SizedBox(height: 200, child: Image.asset("assets/levi2.png")),
-                  Positioned(
-                    bottom: 0,
-                    child: Text(
-                      "Attack On \nInfox",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.dancingScript(
-                          textStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 60.0,
-                      )),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 30),
-              Text(
-                "Round $round",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontSize: 24.0,
-                    color: MyColors.GreenColor,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "Team ${CurrentUser.userName}",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 18.0,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "Current Points - ${CurrentUser.score}",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text("Next Clue - \n" + getQuestion()['clue']),
-              const SizedBox(height: 20),
-              btnWidget("Leaderboard", callback: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: ((context) => const Leaderboard())));
-              }),
-              const SizedBox(height: 20),
-              btnWidget("Scan QR Code", callback: () async {
-                bool out = await isOut();
-                if (out) {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: ((context) => Disqualification())),
-                      (route) => false);
+      body: FutureBuilder<int>(
+          future: updateTeamData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
+                if (snapshot.data == 200) {
+                  return SingleChildScrollView(
+                    child: SafeArea(
+                        child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        //mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Image.asset("assets/infoxlogo.png"),
+                              SizedBox(
+                                  height: 200,
+                                  child: Image.asset("assets/levi2.png")),
+                              Positioned(
+                                bottom: 0,
+                                child: Text(
+                                  "Attack On \nInfox",
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.dancingScript(
+                                      textStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 60.0,
+                                  )),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          Text(
+                            "Round $round",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                fontSize: 24.0,
+                                color: MyColors.GreenColor,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            "Team ${CurrentUser.userName}",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 18.0,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            "Current Points - ${CurrentUser.score}",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          CurrentUser.level <= 4
+                              ? Text("Next Clue - \n" + getQuestion()['clue'])
+                              : Text(
+                                  "Congratulations! You have cleared all the questions"),
+                          const SizedBox(height: 20),
+                          btnWidget("Leaderboard", callback: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: ((context) =>
+                                        const Leaderboard())));
+                          }),
+                          const SizedBox(height: 20),
+                          btnWidget("Scan QR Code", callback: () async {
+                            if (CurrentUser.level <= 4) {
+                              bool out = await isOut();
+                              if (out) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: ((context) =>
+                                            Disqualification())),
+                                    (route) => false);
+                              } else {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: ((context) =>
+                                            const QRScanner())));
+                              }
+                            } else {
+                              ShowSnackBar(
+                                  "All Questions Done! Nothing to Scan more",
+                                  context);
+                            }
+                          }),
+                          const SizedBox(height: 20),
+                          btnWidget("Logout", callback: () async {
+                            var prefs = await SharedPreferences.getInstance();
+                            await prefs.setBool("isLogged", false);
+                            await prefs.setString("teamName", "");
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const MyApp()),
+                                (route) => false);
+                          }),
+                        ],
+                      ),
+                    )),
+                  );
                 } else {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: ((context) => const QRScanner())));
+                  return Center(
+                      child: Column(
+                    children: [
+                      Text('Something went wrong! Please try again'),
+                      btnWidget("Retry", callback: () {
+                        setState(() {});
+                      })
+                    ],
+                  ));
                 }
-              }),
-              const SizedBox(height: 20),
-              btnWidget("Logout", callback: () async {
-                var prefs = await SharedPreferences.getInstance();
-                await prefs.setBool("isLogged", false);
-                await prefs.setString("teamName", "");
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MyApp()),
-                    (route) => false);
-              }),
-            ],
-          ),
-        )),
-      ),
+              } else {
+                return Container();
+              }
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return Center(
+                  child: Column(
+                children: [
+                  Text('Something went wrong! Please try again'),
+                  btnWidget("Retry", callback: () {
+                    setState(() {});
+                  })
+                ],
+              ));
+            }
+          }),
     );
   }
 
