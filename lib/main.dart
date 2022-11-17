@@ -1,3 +1,5 @@
+import 'package:fanapp/currentuser.dart';
+import 'package:fanapp/data/firebase_helper.dart';
 import 'package:fanapp/screens/home.dart';
 import 'package:fanapp/screens/login.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,8 +11,8 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+     options: DefaultFirebaseOptions.currentPlatform,
+      );
   runApp(const MyApp());
 }
 
@@ -53,6 +55,9 @@ Future<bool> showLoginPage() async {
     return false;
   } else {
     print(true);
+    CurrentUser.id = prefs.getString("teamName")!;
+    await updateTeamData();
+
     return true;
   }
 }

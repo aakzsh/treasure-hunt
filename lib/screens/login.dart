@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fanapp/currentuser.dart';
+import 'package:fanapp/data/firebase_helper.dart';
 
 import 'package:fanapp/screens/home.dart';
 
@@ -41,8 +43,9 @@ class _LoginState extends State<Login> {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.dancingScript(
                         textStyle: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 60.0,)),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 60.0,
+                    )),
                   ),
                 ),
               ],
@@ -51,8 +54,8 @@ class _LoginState extends State<Login> {
             Text(
               "Treasure Hunt",
               style: GoogleFonts.poppins(
-                  textStyle:
-                      const TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0)),
+                  textStyle: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 24.0)),
             ),
             const SizedBox(height: 40),
             Padding(
@@ -110,12 +113,13 @@ class _LoginState extends State<Login> {
                           .get();
                       if (data.exists) {
                         print("exists");
-              
+
                         if (data.data()!['passkey'] == passKeyC.text) {
                           final prefs = await SharedPreferences.getInstance();
                           await prefs.setBool("isLogged", true);
                           await prefs.setString("teamName", teamNameC.text);
-              
+                          CurrentUser.id = data.data()!['id'];
+                          await updateTeamData();
                           // var hehe = await prefs.getBool("isLogged");
                           Navigator.pushAndRemoveUntil(
                               context,
@@ -129,7 +133,8 @@ class _LoginState extends State<Login> {
                         ShowSnackBar("User Doesn't Exist", context);
                       }
                     } else {
-                      ShowSnackBar("Please fill username and password", context);
+                      ShowSnackBar(
+                          "Please fill username and password", context);
                     }
                   },
                 ),

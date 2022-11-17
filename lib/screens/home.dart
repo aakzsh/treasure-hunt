@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fanapp/currentuser.dart';
+import 'package:fanapp/data/questions.dart';
 import 'package:fanapp/extras/snackbar.dart';
 import 'package:fanapp/main.dart';
 import 'package:fanapp/screens/disqualification.dart';
@@ -29,26 +31,26 @@ class _HomeState extends State<Home> {
   var questions;
   @override
   void initState() {
-    getRound();
+    //print("isout"+ CurrentUser.isOut.toString());
+    /* if (CurrentUser.isOut) {
+     // print("disqualified");
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: ((context) => Disqualification())),
+          (route) => false);
+    }*/
+    /*getRound();
     getTeamData();
-    setDetails();
-
+    setDetails();*/
     super.initState();
   }
 
   Future<bool> isOut() async {
     bool isout = false;
-    ins.collection("teams").doc(teamname).get().then((value) => {
+    await ins.collection("teams").doc(CurrentUser.id).get().then((value) => {
           isout = value.data()!['isOut'],
-          if (isout == true)
-            {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: ((context) => Disqualification())),
-                  (route) => false)
-            }
         });
-    return true;
+    return isout;
   }
 
   void getRound() async {
@@ -61,13 +63,13 @@ class _HomeState extends State<Home> {
 
   void getQuestions() async {
     print("get questions pe hoon");
-    print("group" + group);
+    print("group$group");
     ins
         .collection("questions")
         .doc(group)
         .get()
         .then((value) => {
-              print("xyz" + value.data().toString()),
+              print("xyz${value.data()}"),
               setState(() {
                 questions = value.data();
               })
@@ -78,7 +80,7 @@ class _HomeState extends State<Home> {
   void getTeamData() async {
     var prefs = await SharedPreferences.getInstance();
     var tn = prefs.getString("teamName");
-    print("tn hai" + tn.toString());
+    print("tn hai$tn");
     ins
         .collection("teams")
         .doc(tn.toString())
@@ -152,7 +154,7 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 10),
               Text(
-                "Team $teamname",
+                "Team ${CurrentUser.userName}",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 18.0,
@@ -160,15 +162,14 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 10),
               Text(
-                "Current Points - $score",
+                "Current Points - ${CurrentUser.score}",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 16.0,
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                  "Next Clue - Cillum do in qui veniam pariatur fugiat do minim magna consectetur est consequat."),
+              Text("Next Clue - \n" + getQuestion()['clue']),
               const SizedBox(height: 20),
               btnWidget("Leaderboard", callback: () {
                 Navigator.push(
@@ -178,11 +179,19 @@ class _HomeState extends State<Home> {
               }),
               const SizedBox(height: 20),
               btnWidget("Scan QR Code", callback: () async {
-                await isOut();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: ((context) => const QRScanner())));
+                bool out = await isOut();
+                if (out) {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => Disqualification())),
+                      (route) => false);
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => const QRScanner())));
+                }
               }),
               const SizedBox(height: 20),
               btnWidget("Logout", callback: () async {
@@ -199,5 +208,22 @@ class _HomeState extends State<Home> {
         )),
       ),
     );
+  }
+
+  Map<dynamic, dynamic> getQuestion() {
+    switch (CurrentUser.userGRP) {
+      case "A":
+        return round1gA[CurrentUser.level];
+      case "B":
+        return round1gB[CurrentUser.level];
+      case "C":
+        return round1gC[CurrentUser.level];
+      case "D":
+        return round1gD[CurrentUser.level];
+      case "E":
+        return round1gE[CurrentUser.level];
+      default:
+        return round1gA[CurrentUser.level];
+    }
   }
 }
