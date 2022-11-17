@@ -101,9 +101,7 @@ class _QRScannerState extends State<QRScanner> {
   }
 
   Future<bool> checkAnswer(String ans) async {
-    if (
-        ans == getQuestion()['code']
-        ) {
+    if (ans == getQuestion()['code']) {
       //increase points and level'
       await FirebaseFirestore.instance
           .collection('teams')
@@ -121,7 +119,7 @@ class _QRScannerState extends State<QRScanner> {
       await FirebaseFirestore.instance
           .collection('teams')
           .doc(CurrentUser.id)
-          .update({'score': FieldValue.increment(-5)})
+          .update({'score': FieldValue.increment(-2)})
           .then((value) => print("User Updated"))
           .catchError((error) => print("Failed to update user: $error"));
 

@@ -37,15 +37,28 @@ class _LeaderboardState extends State<Leaderboard> {
     });
 
     print("123");
+    // await FirebaseFirestore.instance
+    //     .collection("leaderboard")
+    //     .doc(round == 1 ? "scores" : "scores2")
+    //     .get()
+    //     .then((value) => {
+    //           // print(value),
+    //           setState(() {
+    //             score = value.data()!['scores'];
+    //           })
+    //         })
+    //     .then((value) => {filterData()});
+
     await FirebaseFirestore.instance
-        .collection("leaderboard")
-        .doc(round == 1 ? "scores" : "scores2")
+        .collection("teams")
         .get()
         .then((value) => {
-              // print(value),
+              // print(value.docs.map((e) => e.data()).toList())
+
               setState(() {
-                score = value.data()!['scores'];
-              })
+                score = value.docs.map((e) => e.data()).toList();
+              }),
+              // print(score.toString())
             })
         .then((value) => {filterData()});
   }
@@ -56,11 +69,11 @@ class _LeaderboardState extends State<Leaderboard> {
     var x = [];
 
     if (round == 1) {
-      x = List.from(score.where((element) => element['group'] == 'A'));
+      x = List.from(score.where((element) => element['group'] == group));
     } else {
       x = score;
     }
-    x.sort((a, b) => b['points'].compareTo(a['points']));
+    x.sort((a, b) => b['score'].compareTo(a['score']));
     setState(() {
       score = x;
     });
@@ -121,9 +134,9 @@ class _LeaderboardState extends State<Leaderboard> {
                           "Rank ${index + 1}",
                           style: TextStyle(color: Colors.green, fontSize: 15),
                         ),
-                        title: Text(score[index]['team']),
+                        title: Text(score[index]['name']),
                         subtitle:
-                            Text("Score: " + score[index]['points'].toString()),
+                            Text("Score: " + score[index]['score'].toString()),
                       );
                     }),
               )

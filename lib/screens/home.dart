@@ -40,9 +40,10 @@ class _HomeState extends State<Home> {
           MaterialPageRoute(builder: ((context) => Disqualification())),
           (route) => false);
     }*/
-    /*getRound();
-    getTeamData();
+    getRound();
+    /*getTeamData();
     setDetails();*/
+
     super.initState();
   }
 
