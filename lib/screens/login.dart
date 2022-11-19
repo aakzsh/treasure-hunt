@@ -3,6 +3,7 @@ import 'package:fanapp/currentuser.dart';
 import 'package:fanapp/data/firebase_helper.dart';
 
 import 'package:fanapp/screens/home.dart';
+import 'package:fanapp/screens/new.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,6 +32,12 @@ class _LoginState extends State<Login> {
             child: Column(
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => New()));
+                },
+                icon: Icon(Icons.add)),
             Stack(
               alignment: Alignment.center,
               children: [

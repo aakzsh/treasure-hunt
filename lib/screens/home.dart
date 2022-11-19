@@ -180,7 +180,7 @@ class _HomeState extends State<Home> {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            "Current Points - ${CurrentUser.score}",
+                            "Current Points : ${CurrentUser.score}",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontSize: 16.0,

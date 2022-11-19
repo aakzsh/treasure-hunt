@@ -32,10 +32,10 @@ class _LeaderboardState extends State<Leaderboard> {
     // });
     var prefs = await SharedPreferences.getInstance();
 
-    setState(() {
-      // group = prefs.getString("group")!;
-      round = prefs.getInt("round")!;
-    });
+    // setState(() {
+    //   // group = prefs.getString("group")!;
+    //   round = prefs.getInt("round")!;
+    // });
 
     print("123");
     // await FirebaseFirestore.instance
@@ -50,7 +50,7 @@ class _LeaderboardState extends State<Leaderboard> {
     //         })
     //     .then((value) => {filterData()});
 
-    await FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection("teams")
         .get()
         .then((value) => {
@@ -62,6 +62,8 @@ class _LeaderboardState extends State<Leaderboard> {
               // print(score.toString())
             })
         .then((value) => {filterData()});
+
+    log(score.toString());
   }
 
   void filterData() async {
