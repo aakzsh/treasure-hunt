@@ -32,12 +32,12 @@ class _LoginState extends State<Login> {
             child: Column(
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => New()));
-                },
-                icon: Icon(Icons.add)),
+            // IconButton(
+            //     onPressed: () {
+            //       Navigator.push(
+            //           context, MaterialPageRoute(builder: (context) => New()));
+            //     },
+            //     icon: Icon(Icons.add)),
             Stack(
               alignment: Alignment.center,
               children: [

@@ -106,12 +106,12 @@ class _LeaderboardState extends State<Leaderboard> {
                         padding: EdgeInsets.only(right: 0.0),
                         child: Text(
                           round == 1
-                              ? "Leaderboard Round 1 Group $group"
+                              ? "Leaderboard Round 1 Group ${CurrentUser.userGRP}"
                               : "Leaderboard Round 2",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 24.0,
-                              color: MyColors.GreenColor,
+                              color: Color.fromARGB(255, 18, 29, 18),
                               fontWeight: FontWeight.bold),
                         ),
                       ),
