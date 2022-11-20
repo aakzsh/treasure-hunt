@@ -51,17 +51,31 @@ class _LeaderboardState extends State<Leaderboard> {
     //     .then((value) => {filterData()});
 
     FirebaseFirestore.instance
-        .collection("teams")
+        .collection("misc")
+        .doc("round")
         .get()
         .then((value) => {
               // print(value.docs.map((e) => e.data()).toList())
 
               setState(() {
-                score = value.docs.map((e) => e.data()).toList();
+                round = value.data()!['round'];
               }),
               // print(score.toString())
             })
-        .then((value) => {filterData()});
+        .then((value) => {
+              FirebaseFirestore.instance
+                  .collection("teams")
+                  .get()
+                  .then((value) => {
+                        // print(value.docs.map((e) => e.data()).toList())
+
+                        setState(() {
+                          score = value.docs.map((e) => e.data()).toList();
+                        }),
+                        // print(score.toString())
+                      })
+                  .then((value) => {filterData()})
+            });
 
     log(score.toString());
   }

@@ -18,15 +18,14 @@ List<Map<dynamic, dynamic>> round2 = [
   },
   {
     "clue":
-        "mere paas do hee shabd hai,\nlekin laakhon ke bhaavanaen hain,\nmain social media nahin hoon,\nlekin har jagah rehta hoon\nanumaan lagao ki main kaun hoon?",
-    "code": "HMSIAD",
-    "answer": "Post Office",
+        "One minute we can be in a small club, the next minute we can be in a coliseum, and the next minute we can be in an opera house . It varies, depending on the promoter, the budget, and the traveling distance. Currently i'm on construction phase",
+    "code": "UFEIOU",
+    "answer": "New Auditorium",
   },
   {
-    "clue":
-        "Residents calling on video call in residential ground and the name of this college loud out.",
+    "clue": "I'm not the god but for people I'm the god",
     "code": "MLSREU",
-    "answer": "GGSIPU named in ground near VC Residence",
+    "answer": "Health centre",
   },
   {
     "clue":
@@ -63,9 +62,9 @@ List<Map<dynamic, dynamic>> round1gA = [
   },
   {
     "clue":
-        "I'm simple I'm common\nDon't do partiality with anyone\nYou come they come we come\nAll can sit and stay together.",
+        "My owner filled 14000 L of water everyday and it becomes 15000 L. I don't know how",
     "code": "SJQWUC",
-    "answer": "Common Room",
+    "answer": "Swimming Pool Changing Room",
   },
   {
     "clue": "Mere pass  power hai\nOr clue bhi, aao lelo",
@@ -121,9 +120,9 @@ List<Map<dynamic, dynamic>> round1gC = [
   },
   {
     "clue":
-        "Enquiry krni h toh aao raja mere tak phuchne ke liye nhi jana h\ncollege jarruri bus aao entry krro or suvidha pao",
+        "I am standing when the ball comes and hit it with my paddle , that's why I don't have to move. I can read the game.",
     "code": "KTVRVT",
-    "answer": "PRO Office",
+    "answer": "Table Tennis",
   },
   {
     "clue":
